@@ -6,13 +6,13 @@ from config import Config
 import jwt
 import datetime
 
-# Tu Blueprint adaptado para la API
+
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 # Registrar un Usuario
-@auth_bp.route("/register", methods=["POST"]) # En una API REST, el registro siempre es POST
+@auth_bp.route("/register", methods=["POST"]) 
 def register():
-    # En vez de request.form, en una API recibimos JSON
+    
     data = request.get_json()
     
     nombre = data.get("nombre")
@@ -23,7 +23,7 @@ def register():
     
     error = None
 
-    # Tus mismas validaciones
+   
     if not email:
         error = "Se requiere un email"
     elif not password:
@@ -31,7 +31,7 @@ def register():
     elif not dni:
         error = "Se requiere un DNI"
 
-    # Verificamos si ya existe
+    # Verificacion
     user_email = User.query.filter_by(_email=email).first()
     user_dni = User.query.filter_by(_dni=dni).first()
 
@@ -40,22 +40,22 @@ def register():
     elif user_dni is not None:
         error = f"El DNI {dni} ya se encuentra registrado"
 
-    # Si no hay errores, guardamos igual que en tu ejemplo
+    
     if error is None:
         nuevo_usuario = User(
             _nombre=nombre,
             _apellido=apellido,
             _dni=dni,
             _email=email,
-            password=password # El setter del modelo encripta esto automáticamente
+            password=password 
         )
         db.session.add(nuevo_usuario)
         db.session.commit()
         
-        # En vez de redirect, devolvemos un JSON de éxito
+        
         return jsonify({"mensaje": "Usuario registrado correctamente"}), 201
 
-    # Si hubo error, devolvemos un JSON con el error
+    
     return jsonify({"error": error}), 400
 
 
@@ -68,7 +68,7 @@ def login():
     
     error = None
     
-    # Tu misma lógica de búsqueda
+    
     user = User.query.filter_by(_email=email).first()
 
     if user is None:
@@ -77,8 +77,7 @@ def login():
         error = "La contraseña es incorrecta"
 
     if error is None:
-        # En vez de guardar en 'session' (que usa cookies tradicionales), 
-        # generamos el JWT para que React lo guarde y lo use.
+
         token = jwt.encode({
             'user_id': user.id,
             'email': user.email,

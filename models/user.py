@@ -3,7 +3,7 @@ from models.persons import Person
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(Person):
-    # Herencia: Ya tiene id, nombre, apellido y dni por heredar de Person
+    # Herencia
     __tablename__ = "usuarios"
 
     _email = db.Column("email", db.String(150), unique=True, nullable=False)
@@ -28,7 +28,7 @@ class User(Person):
     def check_password(self, password_ingresada):
         return check_password_hash(self._password_hash, password_ingresada)
 
-    # Polimorfismo: Reescribimos to_dict
+    # Polimorfismo
     def to_dict(self):
         return {
             "id": self.id,

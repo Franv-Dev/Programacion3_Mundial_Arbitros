@@ -7,7 +7,6 @@ class Config:
     PORT = int(os.environ.get('PORT', 5000))
     DEBUG = os.environ.get('FLASK_DEBUG', 'True') == 'True'
     
-    # Credenciales separadas
     user = os.environ.get('DB_USER', 'root')
     password = os.environ.get('DB_PASSWORD', '')
     host = os.environ.get('DB_HOST', 'localhost')
