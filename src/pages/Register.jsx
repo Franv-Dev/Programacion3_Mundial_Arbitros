@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Box, Paper, Typography, TextField, Button, Checkbox, FormControlLabel, InputAdornment, IconButton } from "@mui/material";
 import PersonOutlined from "@mui/icons-material/PersonOutlined";
 import MailOutlined from "@mui/icons-material/MailOutlined";
@@ -14,14 +14,15 @@ export default function Register() {
   const { register } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [form, setForm] = useState({ nombre: "", email: "", password: "", confirmPassword: "", terms: false });
+  const [error, setError] = useState("");
+  const [form, setForm] = useState({ name: "", lastName: "", email: "", password: "", confirmPassword: "", terms: false });
 
   const handleChange = (e) => {
     const { name, value, checked } = e.target;
     setForm({ ...form, [name]: name === "terms" ? checked : value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.password !== form.confirmPassword) {
       alert("Las contraseñas no coinciden");
@@ -31,8 +32,13 @@ export default function Register() {
       alert("Debes aceptar los términos y condiciones");
       return;
     }
-    register(form.nombre, form.email, form.password);
-    navigate("/referees");
+    setError("");
+    try {
+      await register(form.name, form.lastName, form.email, form.password);
+      navigate("/login");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -46,10 +52,22 @@ export default function Register() {
 
         <Box component="form" onSubmit={handleSubmit} sx={{ display: "grid", gap: 2 }}>
           <TextField
-            name="nombre"
-            value={form.nombre}
+            name="name"
+            value={form.name}
             onChange={handleChange}
-            label="Nombre completo"
+            label="Nombre"
+            variant="filled"
+            fullWidth
+            InputLabelProps={{ sx: { color: "rgba(255,255,255,0.75)" } }}
+            InputProps={{ startAdornment: (<InputAdornment position="start"><PersonOutlined sx={{ color: "rgba(255,255,255,0.9)" }} /></InputAdornment>) }}
+            sx={{ bgcolor: COLORS.field, borderRadius: 3, input: { color: "#fff" } }}
+          />
+
+          <TextField
+            name="lastName"
+            value={form.lastName}
+            onChange={handleChange}
+            label="Apellido"
             variant="filled"
             fullWidth
             InputLabelProps={{ sx: { color: "rgba(255,255,255,0.75)" } }}
@@ -118,6 +136,12 @@ export default function Register() {
             label={<Typography sx={{ color: "#fff", fontSize: 14 }}>Acepto los Términos y Condiciones</Typography>}
             sx={{ mt: 1 }}
           />
+
+          {error && (
+            <Typography sx={{ color: "#ef4444", fontSize: 14, textAlign: "center" }}>
+              {error}
+            </Typography>
+          )}
 
           <Button type="submit" fullWidth sx={{ py: 1.8, borderRadius: 3, bgcolor: COLORS.gold, color: "#071010", fontWeight: 700, fontSize: 16, '&:hover': { bgcolor: COLORS.goldBright } }}>
             Crear cuenta

@@ -4,10 +4,12 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Navbar from "./components/Navbar";
 
 export default function App() {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
 
         <Route
