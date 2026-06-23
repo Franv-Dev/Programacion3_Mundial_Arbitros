@@ -2,59 +2,53 @@ from flask import Blueprint, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
 from models.user import User
+from models.admin import Admin
 from config import Config
 import jwt
 import datetime
-
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 # Registrar un Usuario
 @auth_bp.route("/register", methods=["POST"]) 
 def register():
-    
     data = request.get_json()
     
     name = data.get("name")
     lastName = data.get("lastName")
-    dni = data.get("dni")
     gmail = data.get("gmail")
     password = data.get("password")
     
     error = None
 
+    # 1. Validaciones rápidas (limpiamos las repeticiones)
     if not gmail:
         error = "Se requiere un email"
     elif not password:
         error = "Se requiere una contraseña"
-    elif not dni:
-        error = "Se requiere un DNI"
+    elif len(password) < 8:
+        error = "La contraseña debe tener al menos 8 caracteres"
+    elif not any(char.isdigit() for char in password):
+        error = "La contraseña debe contener al menos un número"
 
-    # Verificacion
-    user_gmail = User.query.filter_by(_gmail=gmail).first()
-    user_dni = User.query.filter_by(_dni=dni).first()
-
-    if user_gmail is not None:
-        error = f"El email: {gmail} ya se encuentra registrado"
-    elif user_dni is not None:
-        error = f"El DNI {dni} ya se encuentra registrado"
-
+    # 2. Verificación en la Base de Datos (User y Admin)
+    if error is None:
+        if User.query.filter_by(_gmail=gmail).first() or Admin.query.filter_by(_gmail=gmail).first():
+            error = f"El email {gmail} ya se encuentra registrado"
     
+    # 3. Guardado en la base de datos
     if error is None:
         new_user = User(
             _name=name,
             _lastName=lastName,
-            _dni=dni,
             _gmail=gmail,
             password=password 
         )
         db.session.add(new_user)
         db.session.commit()
         
-        
         return jsonify({"mensaje": "Usuario registrado correctamente"}), 201
 
-    
     return jsonify({"error": error}), 400
 
 
@@ -67,27 +61,32 @@ def login():
     
     error = None
     
+    # 1. Buscar PRIMERO si el que entra es el Administrador
+    cuenta = Admin.query.filter_by(_gmail=gmail).first()
     
-    user = User.query.filter_by(_gmail=gmail).first()
+    # 2. Si no es Admin, buscar si es un Usuario común
+    if not cuenta:
+        cuenta = User.query.filter_by(_gmail=gmail).first()
 
-    if user is None:
-        error = "El email es incorrecto"
-    elif not user.check_password(password):
+    # 3. Validaciones de acceso
+    if cuenta is None:
+        error = "El email es incorrecto o no está registrado"
+    elif not cuenta.check_password(password):
         error = "La contraseña es incorrecta"
 
+    # 4. Generación del JWT
     if error is None:
-
         token = jwt.encode({
-            'user_id': user.id,
-            'gmail': user.gmail,
-            'rol': user.rol,
+            'user_id': cuenta.id,
+            'gmail': cuenta.gmail,
+            'rol': cuenta.rol, # Extrae automáticamente si es 'Admin' o 'Users'
             'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=2)
         }, Config.JWT_SECRET_KEY, algorithm="HS256")
 
         return jsonify({
             "mensaje": "Login exitoso",
             "token": token,
-            "usuario": user.to_dict()
+            "usuario": cuenta.to_dict()
         }), 200
         
     return jsonify({"error": error}), 401
