@@ -4,14 +4,14 @@ from models.persons import Person
 class Referee(Person):
     __tablename__ = 'referees'
 
-    _nacionality = db.Column("nacionality", db.String(50), nullable=False)
+    _nationality = db.Column("nationality", db.String(50), nullable=False)
     _matches_officiated = db.Column("matches_officiated", db.Integer, default=0)
     _yellow_cards_given = db.Column("yellow_cards_given", db.Integer, default=0)
     _red_cards_given = db.Column("red_cards_given", db.Integer, default=0)
-    _image_url = db.Column("image_url", db.String(255), nullable=True)
+    _image_url = db.Column("image_url", db.String(255), nullable=True, default=None)
 
     @property
-    def nacionalidad(self): return self._nacionalidad
+    def nationality(self): return self._nationality
 
     @property
     def statistics(self):
@@ -25,10 +25,10 @@ class Referee(Person):
     def to_dict(self):
         return {
             "id": self.id,
-            "nombre": self.nombre,
-            "apellido": self.apellido,
+            "name": self.name,
+            "lastName": self.lastName,
             "dni": self.dni,
-            "nacionalidad": self.nacionalidad,
+            "nationality": self.nationality,
             "statistics": self.statistics,
             "image_url": self._image_url
         }
