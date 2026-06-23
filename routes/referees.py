@@ -24,11 +24,11 @@ def admin_required(f):
         try:
             # Usamos JWT_SECRET_KEY igual que en auth.py
             decoded_token = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=["HS256"])
-            
+
             # Buscamos 'rol' igual a 'Admin'
             if decoded_token.get("role") != "Admin":
                 return jsonify({"error": "Acceso denegado. Se requiere privilegios de administrador."}), 403
-                
+
         except jwt.ExpiredSignatureError:
             return jsonify({"error": "Token expirado"}), 401
         except jwt.InvalidTokenError:
@@ -50,16 +50,19 @@ def get_referees():
 @admin_required
 def create_referee():
     data = request.get_json()
-    
+
     name = data.get("name")
     last_name = data.get("lastName")
     nationality = data.get("nationality")
-    
+
     # las estadísticas y la imagen (si no vienen, por defecto son 0 o None)
     matches = data.get("matches_officiated", 0)
     yellows = data.get("yellow_cards_given", 0)
     reds = data.get("red_cards_given", 0)
     image_url = data.get("image_url")
+    age = data.get("age")
+    years_refereeing = data.get("yearsRefereeing")
+    sanctions = data.get("sanctions", 0)
 
     if not all([name, last_name, nationality]):
         return jsonify({"error": "Faltan campos requeridos (nombre, apellido, nacionalidad)"}), 400
@@ -71,7 +74,10 @@ def create_referee():
         _matches_officiated=matches,
         _yellow_cards_given=yellows,
         _red_cards_given=reds,
-        _image_url=image_url
+        _image_url=image_url,
+        _age=age,
+        _years_refereeing=years_refereeing,
+        _sanctions=sanctions
     )
     db.session.add(new_referee)
     db.session.commit()
@@ -99,6 +105,9 @@ def update_referee():
     referee._yellow_cards_given = data.get("yellow_cards_given", referee._yellow_cards_given)
     referee._red_cards_given = data.get("red_cards_given", referee._red_cards_given)
     referee._image_url = data.get("image_url", referee._image_url)
+    referee._age = data.get("age", referee._age)
+    referee._years_refereeing = data.get("yearsRefereeing", referee._years_refereeing)
+    referee._sanctions = data.get("sanctions", referee._sanctions)
 
     db.session.commit()
 
@@ -115,5 +124,3 @@ def delete_referee(referee_id):
     db.session.commit()
 
     return jsonify({"message": "Árbitro eliminado correctamente"}), 200
-
-
