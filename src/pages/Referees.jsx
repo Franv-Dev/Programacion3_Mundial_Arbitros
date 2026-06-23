@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
-  Box, CircularProgress, Typography, Button,
+  Box, CircularProgress, Typography, Button, Stack,
+  TextField, Select, MenuItem, FormControl, InputLabel,
   Dialog, DialogTitle, DialogContent, DialogActions,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -75,9 +76,27 @@ export default function Referees() {
   const [formOpen, setFormOpen] = useState(false);
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [search, setSearch] = useState("");
+  const [nationalityFilter, setNationalityFilter] = useState("");
 
   const { data, loading, error } = useFetch("http://localhost:5000/api/referees/", refreshKey);
   const referees = data.map(getRefereeWithFlag);
+
+  const nationalities = useMemo(
+    () => [...new Set(referees.map((r) => r.nationality))].sort(),
+    [referees]
+  );
+
+  const filteredReferees = useMemo(() => {
+    const q = search.toLowerCase();
+    return referees.filter((r) => {
+      const matchesText = !q || `${r.name} ${r.lastName}`.toLowerCase().includes(q);
+      const matchesNationality = !nationalityFilter || r.nationality === nationalityFilter;
+      return matchesText && matchesNationality;
+    });
+  }, [referees, search, nationalityFilter]);
+
+  const clearFilters = () => { setSearch(""); setNationalityFilter(""); };
 
   const refresh = () => setRefreshKey((k) => k + 1);
 
@@ -154,6 +173,78 @@ export default function Referees() {
 
         <StatsBar referees={referees} />
 
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          spacing={1.5}
+          sx={{ width: "100%", maxWidth: 700, mb: 2 }}
+        >
+          <TextField
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar árbitro..."
+            variant="filled"
+            size="small"
+            fullWidth
+            InputLabelProps={{ sx: { color: "rgba(255,255,255,.65)" } }}
+            inputProps={{ sx: { color: "#fff" } }}
+            sx={{
+              flex: 2,
+              bgcolor: "rgba(255,255,255,.07)",
+              borderRadius: 2,
+              "& .MuiFilledInput-root": {
+                borderRadius: 2,
+                "&:before": { borderBottomColor: "rgba(212,175,55,.3)" },
+                "&:hover:before": { borderBottomColor: COLORS.gold },
+                "&:after": { borderBottomColor: COLORS.gold },
+              },
+            }}
+          />
+
+          <FormControl
+            variant="filled"
+            size="small"
+            sx={{
+              flex: 1,
+              minWidth: 160,
+              bgcolor: "rgba(255,255,255,.07)",
+              borderRadius: 2,
+              "& .MuiFilledInput-root": {
+                borderRadius: 2,
+                "&:before": { borderBottomColor: "rgba(212,175,55,.3)" },
+                "&:hover:before": { borderBottomColor: COLORS.gold },
+                "&:after": { borderBottomColor: COLORS.gold },
+              },
+            }}
+          >
+            <InputLabel sx={{ color: "rgba(255,255,255,.65)" }}>Nacionalidad</InputLabel>
+            <Select
+              value={nationalityFilter}
+              onChange={(e) => setNationalityFilter(e.target.value)}
+              sx={{ color: "#fff" }}
+              MenuProps={{ PaperProps: { sx: { bgcolor: COLORS.fieldDeep, color: "#fff" } } }}
+            >
+              <MenuItem value="">Todas</MenuItem>
+              {nationalities.map((n) => (
+                <MenuItem key={n} value={n}>{n}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={clearFilters}
+            sx={{
+              color: COLORS.gold,
+              borderColor: "rgba(212,175,55,.5)",
+              whiteSpace: "nowrap",
+              "&:hover": { borderColor: COLORS.gold, bgcolor: "rgba(212,175,55,.08)" },
+            }}
+          >
+            Limpiar
+          </Button>
+        </Stack>
+
         {isAdmin && (
           <Box sx={{ width: "100%", display: "flex", justifyContent: "flex-end", mb: 1 }}>
             <Button
@@ -185,7 +276,7 @@ export default function Referees() {
 
         {!loading && !error && (
           <RefereeGrid
-            referees={referees}
+            referees={filteredReferees}
             onSelect={setSelected}
             isAdmin={isAdmin}
             onEdit={handleEdit}
