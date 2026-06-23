@@ -15,16 +15,15 @@ def register():
     
     data = request.get_json()
     
-    nombre = data.get("nombre")
-    apellido = data.get("apellido")
+    name = data.get("name")
+    lastName = data.get("lastName")
     dni = data.get("dni")
-    email = data.get("email")
+    gmail = data.get("gmail")
     password = data.get("password")
     
     error = None
 
-   
-    if not email:
+    if not gmail:
         error = "Se requiere un email"
     elif not password:
         error = "Se requiere una contraseña"
@@ -32,24 +31,24 @@ def register():
         error = "Se requiere un DNI"
 
     # Verificacion
-    user_email = User.query.filter_by(_email=email).first()
+    user_gmail = User.query.filter_by(_gmail=gmail).first()
     user_dni = User.query.filter_by(_dni=dni).first()
 
-    if user_email is not None:
-        error = f"El email: {email} ya se encuentra registrado"
+    if user_gmail is not None:
+        error = f"El email: {gmail} ya se encuentra registrado"
     elif user_dni is not None:
         error = f"El DNI {dni} ya se encuentra registrado"
 
     
     if error is None:
-        nuevo_usuario = User(
-            _nombre=nombre,
-            _apellido=apellido,
+        new_user = User(
+            _name=name,
+            _lastName=lastName,
             _dni=dni,
-            _email=email,
+            _gmail=gmail,
             password=password 
         )
-        db.session.add(nuevo_usuario)
+        db.session.add(new_user)
         db.session.commit()
         
         
@@ -63,13 +62,13 @@ def register():
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
-    email = data.get("email")
+    gmail = data.get("gmail")
     password = data.get("password")
     
     error = None
     
     
-    user = User.query.filter_by(_email=email).first()
+    user = User.query.filter_by(_gmail=gmail).first()
 
     if user is None:
         error = "El email es incorrecto"
@@ -80,7 +79,7 @@ def login():
 
         token = jwt.encode({
             'user_id': user.id,
-            'email': user.email,
+            'gmail': user.gmail,
             'rol': user.rol,
             'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=2)
         }, Config.JWT_SECRET_KEY, algorithm="HS256")

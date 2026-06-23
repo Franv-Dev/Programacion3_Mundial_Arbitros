@@ -4,14 +4,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(Person):
     # Herencia
-    __tablename__ = "usuarios"
+    __tablename__ = "user"
 
-    _email = db.Column("email", db.String(150), unique=True, nullable=False)
+    _gmail = db.Column("gmail", db.String(150), unique=True, nullable=False)
     _password_hash = db.Column("password_hash", db.String(255), nullable=False)
     _rol = db.Column("rol", db.String(50), default="Users", nullable=False)
 
     @property
-    def email(self): return self._email
+    def gmail(self): return self._gmail
 
     @property
     def rol(self): return self._rol
@@ -32,9 +32,9 @@ class User(Person):
     def to_dict(self):
         return {
             "id": self.id,
-            "nombre": self.nombre,
-            "apellido": self.apellido,
+            "name": self.name,
+            "lastName": self.lastName,
             "dni": self.dni,
-            "email": self.email,
+            "gmail": self.gmail,
             "rol": self.rol
         }
