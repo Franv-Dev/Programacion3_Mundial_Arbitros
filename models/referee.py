@@ -27,7 +27,6 @@ class Referee(Person):
             "id": self.id,
             "name": self.name,
             "lastName": self.lastName,
-            "dni": self.dni,
             "nationality": self.nationality,
             "statistics": self.statistics,
             "image_url": self._image_url
