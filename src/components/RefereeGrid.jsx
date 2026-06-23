@@ -1,9 +1,7 @@
-// components/ArbitroGrid.jsx
-
 import { Box } from "@mui/material";
 import RefereeCard from "./RefereeCard";
 
-export default function RefereeGrid({ referees, onSelect }) {
+export default function RefereeGrid({ referees, onSelect, isAdmin, onEdit, onDelete }) {
   return (
     <Box
       sx={{
@@ -29,6 +27,9 @@ export default function RefereeGrid({ referees, onSelect }) {
           key={referee.id}
           referee={referee}
           onClick={() => onSelect(referee)}
+          isAdmin={isAdmin}
+          onEdit={onEdit}
+          onDelete={onDelete}
         />
       ))}
     </Box>
