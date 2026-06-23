@@ -38,7 +38,7 @@ def admin_required(f):
 
     return decorated_function
 
-# 2. El GET para que TODOS (incluso sin login) puedan ver los árbitros
+# 2. El GET para que  puedan ver los árbitros
 @referees_bp.route("/", methods=["GET"])
 def get_referees():
     referees = Referee.query.all()
@@ -55,7 +55,7 @@ def create_referee():
     last_name = data.get("lastName")
     nationality = data.get("nationality")
     
-    # las estadísticas y la imagen (si no vienen, por defecto son 0 o None)
+    # las estadísticas y la imagen si no vienen, por defecto son 0 o None
     matches = data.get("matches_officiated", 0)
     yellows = data.get("yellow_cards_given", 0)
     reds = data.get("red_cards_given", 0)
