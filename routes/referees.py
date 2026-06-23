@@ -34,10 +34,10 @@ def admin_required(f):
 def create_referee():
     data = request.get_json()
     
-    name = data.get("nombre")
-    last_name = data.get("apellido")
+    name = data.get("name")
+    last_name = data.get("lastName")
     dni = data.get("dni")
-    nationality = data.get("nacionalidad")
+    nationality = data.get("nationality")
     image_url = data.get("image_url")
 
     if not all([name, last_name, dni, nationality]):
@@ -69,10 +69,10 @@ def update_referee():
     if not referee:
         return jsonify({"error": "Árbitro no encontrado"}), 404
 
-    referee._name = data.get("nombre", referee._name)
-    referee._lastName = data.get("apellido", referee._lastName)
+    referee._name = data.get("name", referee._name)
+    referee._lastName = data.get("lastName", referee._lastName)
     referee._dni = data.get("dni", referee._dni)
-    referee._nationality = data.get("nacionalidad", referee._nationality)
+    referee._nationality = data.get("nationality", referee._nationality)
     referee._image_url = data.get("image_url", referee._image_url)
 
     db.session.commit()
