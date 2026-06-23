@@ -1,58 +1,82 @@
 // components/ArbitroCard.jsx
+
 import { Card, Avatar, Box, Typography } from "@mui/material";
 import CountryFlag from "./CountryFlag";
 import { COLORS } from "../theme/tokens";
 
-/**
- * Tarjeta en forma de rombo (diamante).
- * El Card se gira 45° y su contenido se contragira -45° para quedar derecho.
- * Banderas en los vértices laterales + bandera de fondo dentro del rombo.
- */
 export default function ArbitroCard({ arbitro, onClick }) {
   const initials = `${arbitro.nombre[0]}${arbitro.apellido[0]}`.toUpperCase();
 
   return (
     <Box
-      sx={{ width: 296, height: 296, display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{
+        width: 210,
+        height: 210,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
     >
       <Card
         onClick={onClick}
         elevation={0}
         sx={{
           position: "relative",
-          width: 204,
-          height: 204,
+          width: 150,
+          height: 150,
           transform: "rotate(45deg)",
-          borderRadius: 5,
+          borderRadius: 4,
           overflow: "hidden",
           cursor: "pointer",
-          border: "2px solid rgba(212,175,55,.5)",
-          background: COLORS.cardBg,
-          boxShadow: "0 0 22px rgba(212,175,55,.20)",
-          transition: "transform .28s cubic-bezier(.2,.7,.3,1), box-shadow .28s ease",
+
+          background: `
+            linear-gradient(
+              145deg,
+              rgba(16,54,37,.95),
+              rgba(5,19,29,.98)
+            )
+          `,
+
+          border: "1px solid rgba(212,175,55,.35)",
+
+          boxShadow: `
+            0 8px 25px rgba(0,0,0,.5),
+            0 0 15px rgba(212,175,55,.15)
+          `,
+
+          transition: ".35s",
+
           "&:hover": {
-            transform: "rotate(45deg) scale(1.07)",
-            boxShadow: "0 0 42px rgba(212,175,55,.5)",
-            borderColor: "rgba(212,175,55,.85)",
+            transform: "rotate(45deg) scale(1.08)",
+            borderColor: COLORS.gold,
+            boxShadow: `
+              0 12px 35px rgba(0,0,0,.7),
+              0 0 30px rgba(212,175,55,.4)
+            `,
           },
         }}
       >
-        
+        {/* bandera de fondo */}
         <Box
           sx={{
             position: "absolute",
             inset: 0,
             transform: "rotate(-45deg)",
             display: "flex",
-            alignItems: "center",
             justifyContent: "center",
-            pointerEvents: "none",
+            alignItems: "center",
+            opacity: 0.18,
           }}
         >
-          <CountryFlag bg={arbitro.flagBg} width={150} height={104} sx={{ opacity: 0.32, borderRadius: 1.5 }} />
+          <CountryFlag
+            bg={arbitro.flagBg}
+            width={110}
+            height={70}
+            sx={{ borderRadius: 1.5 }}
+          />
         </Box>
 
-    
+        {/* contenido */}
         <Box
           sx={{
             position: "absolute",
@@ -60,39 +84,59 @@ export default function ArbitroCard({ arbitro, onClick }) {
             transform: "rotate(-45deg)",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
             justifyContent: "center",
-            gap: 1.5,
+            alignItems: "center",
+            gap: 1,
           }}
         >
           <Avatar
             src={arbitro.foto || undefined}
             sx={{
-              width: 74,
-              height: 74,
-              border: `2.5px solid ${COLORS.gold}`,
+              width: 55,
+              height: 55,
               bgcolor: COLORS.field,
-              fontWeight: 800,
-              fontSize: 24,
-              boxShadow: "0 6px 16px rgba(0,0,0,.4)",
+              border: `2px solid ${COLORS.gold}`,
+              fontWeight: 900,
+              fontSize: 18,
+              boxShadow: "0 0 18px rgba(212,175,55,.35)",
             }}
           >
             {initials}
           </Avatar>
-          <Box sx={{ textAlign: "center", lineHeight: 1.05 }}>
+
+          <Box sx={{ textAlign: "center" }}>
             <Typography
               sx={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: ".16em",
-                textTransform: "uppercase",
                 color: COLORS.gold,
+                fontSize: 9,
+                fontWeight: 800,
+                letterSpacing: ".15em",
+                textTransform: "uppercase",
               }}
             >
               {arbitro.nombre}
             </Typography>
-            <Typography sx={{ fontSize: 19, fontWeight: 900, color: "#fff" }}>
+
+            <Typography
+              sx={{
+                color: "#fff",
+                fontWeight: 900,
+                fontSize: 15,
+                lineHeight: 1,
+              }}
+            >
               {arbitro.apellido}
+            </Typography>
+
+            <Typography
+              sx={{
+                mt: .4,
+                color: "rgba(255,255,255,.6)",
+                fontSize: 11,
+                fontWeight: 600,
+              }}
+            >
+              {arbitro.pais}
             </Typography>
           </Box>
         </Box>

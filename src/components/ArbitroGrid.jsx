@@ -1,16 +1,36 @@
 // components/ArbitroGrid.jsx
-import { Grid } from "@mui/material";
+
+import { Box } from "@mui/material";
 import ArbitroCard from "./ArbitroCard";
 
-/** Grilla centrada de tarjetas. */
 export default function ArbitroGrid({ arbitros, onSelect }) {
   return (
-    <Grid container spacing={3} justifyContent="center">
+    <Box
+      sx={{
+        width: "100%",
+
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+
+        flexWrap: "wrap",
+
+        gap: {
+          xs: 1,
+          md: 2,
+        },
+
+        mt: 1,
+        pb: 1,
+      }}
+    >
       {arbitros.map((a) => (
-        <Grid item key={a.id}>
-          <ArbitroCard arbitro={a} onClick={() => onSelect(a)} />
-        </Grid>
+        <ArbitroCard
+          key={a.id}
+          arbitro={a}
+          onClick={() => onSelect(a)}
+        />
       ))}
-    </Grid>
+    </Box>
   );
 }
