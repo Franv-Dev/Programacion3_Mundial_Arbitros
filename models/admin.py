@@ -3,7 +3,7 @@ from models.persons import Person
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class Admin(Person):
-    __tablename__ = "admins" 
+    __tablename__ = "admins"
 
     _gmail = db.Column("gmail", db.String(150), unique=True, nullable=False)
     _password_hash = db.Column("password_hash", db.String(255), nullable=False)
@@ -11,9 +11,9 @@ class Admin(Person):
     @property
     def gmail(self): return self._gmail
 
-    
+
     @property
-    def rol(self): return "Admin" 
+    def role(self): return "Admin"
 
     @property
     def password(self):
@@ -32,5 +32,5 @@ class Admin(Person):
             "name": self.name,
             "lastName": self.lastName,
             "gmail": self.gmail,
-            "rol": self.rol
+            "role": self.role
         }

@@ -1,11 +1,11 @@
-// components/ArbitroCard.jsx
-
-import { Card, Avatar, Box, Typography } from "@mui/material";
+import { Card, Avatar, Box, Typography, IconButton } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import CountryFlag from "./CountryFlag";
 import { COLORS } from "../theme/tokens";
 
-export default function ArbitroCard({ arbitro, onClick }) {
-  const initials = `${arbitro.nombre[0]}${arbitro.apellido[0]}`.toUpperCase();
+export default function RefereeCard({ referee, onClick, isAdmin, onEdit, onDelete }) {
+  const initials = `${referee.name[0]}${referee.lastName[0]}`.toUpperCase();
 
   return (
     <Box
@@ -15,6 +15,7 @@ export default function ArbitroCard({ arbitro, onClick }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        position: "relative",
       }}
     >
       <Card
@@ -56,7 +57,6 @@ export default function ArbitroCard({ arbitro, onClick }) {
           },
         }}
       >
-        {/* bandera de fondo */}
         <Box
           sx={{
             position: "absolute",
@@ -69,14 +69,13 @@ export default function ArbitroCard({ arbitro, onClick }) {
           }}
         >
           <CountryFlag
-            bg={arbitro.flagBg}
+            bg={referee.flagBg}
             width={110}
             height={70}
             sx={{ borderRadius: 1.5 }}
           />
         </Box>
 
-        {/* contenido */}
         <Box
           sx={{
             position: "absolute",
@@ -90,7 +89,7 @@ export default function ArbitroCard({ arbitro, onClick }) {
           }}
         >
           <Avatar
-            src={arbitro.foto || undefined}
+            src={referee.imageUrl || undefined}
             sx={{
               width: 55,
               height: 55,
@@ -114,7 +113,7 @@ export default function ArbitroCard({ arbitro, onClick }) {
                 textTransform: "uppercase",
               }}
             >
-              {arbitro.nombre}
+              {referee.name}
             </Typography>
 
             <Typography
@@ -125,7 +124,7 @@ export default function ArbitroCard({ arbitro, onClick }) {
                 lineHeight: 1,
               }}
             >
-              {arbitro.apellido}
+              {referee.lastName}
             </Typography>
 
             <Typography
@@ -136,11 +135,53 @@ export default function ArbitroCard({ arbitro, onClick }) {
                 fontWeight: 600,
               }}
             >
-              {arbitro.pais}
+              {referee.nationality}
             </Typography>
           </Box>
         </Box>
       </Card>
+
+      {isAdmin && (
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 14,
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            gap: 0.5,
+            zIndex: 10,
+          }}
+        >
+          <IconButton
+            size="small"
+            onClick={(e) => { e.stopPropagation(); onEdit(referee); }}
+            sx={{
+              width: 26,
+              height: 26,
+              bgcolor: "rgba(212,175,55,.85)",
+              color: "#071010",
+              "&:hover": { bgcolor: COLORS.gold },
+            }}
+          >
+            <EditIcon sx={{ fontSize: 13 }} />
+          </IconButton>
+
+          <IconButton
+            size="small"
+            onClick={(e) => { e.stopPropagation(); onDelete(referee); }}
+            sx={{
+              width: 26,
+              height: 26,
+              bgcolor: "rgba(220,38,38,.85)",
+              color: "#fff",
+              "&:hover": { bgcolor: "#ef4444" },
+            }}
+          >
+            <DeleteIcon sx={{ fontSize: 13 }} />
+          </IconButton>
+        </Box>
+      )}
     </Box>
   );
 }

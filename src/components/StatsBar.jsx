@@ -1,12 +1,12 @@
 import { Box, Paper, Typography } from "@mui/material";
 import { COLORS } from "../theme/tokens";
 
-export default function StatsBar() {
+export default function StatsBar({ referees = [] }) {
   const stats = [
-    { valor: 64, texto: "Partidos" },
-    { valor: 36, texto: "Árbitros" },
-    { valor: 230, texto: "Amarillas" },
-    { valor: 8, texto: "Rojas" },
+    { value: 104, label: "Partidos" },
+    { value: referees.length, label: "Árbitros" },
+    { value: referees.reduce((sum, r) => sum + (r.yellowCards || 0), 0), label: "Amarillas" },
+    { value: referees.reduce((sum, r) => sum + (r.redCards || 0), 0), label: "Rojas" },
   ];
 
   return (
@@ -21,7 +21,7 @@ export default function StatsBar() {
     >
       {stats.map((s) => (
         <Paper
-          key={s.texto}
+          key={s.label}
           elevation={0}
           sx={{
             width: 110,
@@ -52,7 +52,7 @@ export default function StatsBar() {
               lineHeight: 1,
             }}
           >
-            {s.valor}
+            {s.value}
           </Typography>
 
           <Typography
@@ -63,7 +63,7 @@ export default function StatsBar() {
               fontSize: 13,
             }}
           >
-            {s.texto}
+            {s.label}
           </Typography>
         </Paper>
       ))}

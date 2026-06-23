@@ -70,3 +70,4 @@ Desktop.ini
 *.njsproj
 *.sln
 *.sw?
+.claude/

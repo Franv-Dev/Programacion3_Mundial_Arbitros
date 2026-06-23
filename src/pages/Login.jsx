@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Paper,
@@ -25,6 +25,7 @@ export default function Login() {
   const { login } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   const [form, setForm] = useState({
     email: "",
@@ -41,12 +42,15 @@ export default function Login() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    login(form.email, form.password);
-
-    navigate("/arbitros");
+    setError("");
+    try {
+      await login(form.email, form.password);
+      navigate("/referees");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -227,6 +231,12 @@ export default function Login() {
             </Link>
           </Box>
 
+          {error && (
+            <Typography sx={{ color: "#ef4444", fontSize: 14, textAlign: "center" }}>
+              {error}
+            </Typography>
+          )}
+
           <Button
             type="submit"
             fullWidth
@@ -256,7 +266,7 @@ export default function Login() {
         >
           ¿No tenés cuenta?{" "}
           <Link
-            to="/registro"
+            to="/register"
             style={{
               color: COLORS.gold,
               textDecoration: "none",

@@ -41,11 +41,11 @@ const statLabel = {
   color: "rgba(255,255,255,.6)",
 };
 
-export default function ArbitroModal({ arbitro, onClose }) {
-  const open = Boolean(arbitro);
+export default function RefereeModal({ referee, onClose }) {
+  const open = Boolean(referee);
 
-  const initials = arbitro
-    ? `${arbitro.nombre[0]}${arbitro.apellido[0]}`.toUpperCase()
+  const initials = referee
+    ? `${referee.name[0]}${referee.lastName[0]}`.toUpperCase()
     : "";
 
   return (
@@ -102,7 +102,7 @@ export default function ArbitroModal({ arbitro, onClose }) {
         },
       }}
     >
-      {arbitro && (
+      {referee && (
         <DialogContent sx={{ p: 3.5 }}>
           {/* Botón cerrar */}
           <IconButton
@@ -131,7 +131,7 @@ export default function ArbitroModal({ arbitro, onClose }) {
             }}
           >
             <Avatar
-              src={arbitro.foto || undefined}
+              src={referee.imageUrl || undefined}
               sx={{
                 width: 75,
                 height: 75,
@@ -157,7 +157,7 @@ export default function ArbitroModal({ arbitro, onClose }) {
                   lineHeight: 1.1,
                 }}
               >
-                {arbitro.nombre} {arbitro.apellido}
+                {referee.name} {referee.lastName}
               </Typography>
 
               <Box
@@ -168,7 +168,7 @@ export default function ArbitroModal({ arbitro, onClose }) {
                   mt: 1,
                 }}
               >
-                <CountryFlag bg={arbitro.flagBg} />
+                <CountryFlag bg={referee.flagBg} />
 
                 <Typography
                   sx={{
@@ -176,7 +176,7 @@ export default function ArbitroModal({ arbitro, onClose }) {
                     fontWeight: 600,
                   }}
                 >
-                  {arbitro.pais}
+                  {referee.nationality}
                 </Typography>
               </Box>
             </Box>
@@ -188,7 +188,7 @@ export default function ArbitroModal({ arbitro, onClose }) {
               <InfoTile
                 icon={<CakeIcon sx={{ color: COLORS.gold }} />}
                 label="Edad"
-                value={`${arbitro.edad} años`}
+                value={`${referee.age} años`}
               />
             </Grid>
 
@@ -196,7 +196,7 @@ export default function ArbitroModal({ arbitro, onClose }) {
               <InfoTile
                 icon={<PublicIcon sx={{ color: COLORS.gold }} />}
                 label="Internacional"
-                value={`${arbitro.aniosArbitrando} años`}
+                value={`${referee.yearsRefereeing} años`}
               />
             </Grid>
           </Grid>
@@ -226,7 +226,7 @@ export default function ArbitroModal({ arbitro, onClose }) {
             <Grid item xs={6}>
               <StatTile
                 icon={<SportsSoccerIcon sx={{ color: "#fff" }} />}
-                value={arbitro.partidos}
+                value={referee.matchesOfficiated}
                 label="Partidos arbitrados"
               />
             </Grid>
@@ -235,7 +235,7 @@ export default function ArbitroModal({ arbitro, onClose }) {
               <Box sx={statBox}>
                 <Chip
                   icon={<StyleIcon />}
-                  label={arbitro.amarillas}
+                  label={referee.yellowCards}
                   color="warning"
                   sx={{
                     fontWeight: 900,
@@ -253,7 +253,7 @@ export default function ArbitroModal({ arbitro, onClose }) {
               <Box sx={statBox}>
                 <Chip
                   icon={<StyleIcon />}
-                  label={arbitro.rojas}
+                  label={referee.redCards}
                   color="error"
                   sx={{
                     fontWeight: 900,
@@ -270,7 +270,7 @@ export default function ArbitroModal({ arbitro, onClose }) {
             <Grid item xs={6}>
               <StatTile
                 icon={<BlockIcon sx={{ color: "#fff" }} />}
-                value={arbitro.sanciones}
+                value={referee.sanctions}
                 label="Sanciones aplicadas"
               />
             </Grid>

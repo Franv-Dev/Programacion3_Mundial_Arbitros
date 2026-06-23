@@ -8,15 +8,15 @@ class User(Person):
 
     _gmail = db.Column("gmail", db.String(150), unique=True, nullable=False)
     _password_hash = db.Column("password_hash", db.String(255), nullable=False)
-    _rol = db.Column("rol", db.String(50), default="Users", nullable=False)
+    _role = db.Column("role", db.String(50), default="Users", nullable=False)
 
     @property
     def gmail(self): return self._gmail
 
     @property
-    def rol(self): return self._rol
+    def role(self): return self._role
 
-    
+
     @property
     def password(self):
         raise AttributeError("La contraseña no se puede leer directamente")
@@ -35,5 +35,5 @@ class User(Person):
             "name": self.name,
             "lastName": self.lastName,
             "gmail": self.gmail,
-            "rol": self.rol
+            "role": self.role
         }
