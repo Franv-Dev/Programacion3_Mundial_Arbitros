@@ -38,7 +38,8 @@ Seeder: El administrador se genera por consola (crear_admin.py); el registro pú
 
 
 📐 Diagrama de Clases
- 
+ <img width="1536" height="1024" alt="diagrama de clases" src="https://github.com/user-attachments/assets/ea42895d-c673-4494-ad79-3cad67138579" />
+
 🚀 Instalación
 Requisitos previos
 Node.js 18+
