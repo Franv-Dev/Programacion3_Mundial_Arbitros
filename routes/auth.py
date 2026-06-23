@@ -10,15 +10,15 @@ import datetime
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 # Registrar un Usuario
-@auth_bp.route("/register", methods=["POST"]) 
+@auth_bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
-    
+
     name = data.get("name")
     lastName = data.get("lastName")
     gmail = data.get("gmail")
     password = data.get("password")
-    
+
     error = None
 
     # 1. Validaciones rápidas (limpiamos las repeticiones)
@@ -35,19 +35,19 @@ def register():
     if error is None:
         if User.query.filter_by(_gmail=gmail).first() or Admin.query.filter_by(_gmail=gmail).first():
             error = f"El email {gmail} ya se encuentra registrado"
-    
+
     # 3. Guardado en la base de datos
     if error is None:
         new_user = User(
             _name=name,
             _lastName=lastName,
             _gmail=gmail,
-            password=password 
+            password=password
         )
         db.session.add(new_user)
         db.session.commit()
-        
-        return jsonify({"mensaje": "Usuario registrado correctamente"}), 201
+
+        return jsonify({"message": "Usuario registrado correctamente"}), 201
 
     return jsonify({"error": error}), 400
 
@@ -58,35 +58,35 @@ def login():
     data = request.get_json()
     gmail = data.get("gmail")
     password = data.get("password")
-    
+
     error = None
-    
+
     # 1. Buscar PRIMERO si el que entra es el Administrador
-    cuenta = Admin.query.filter_by(_gmail=gmail).first()
-    
+    account = Admin.query.filter_by(_gmail=gmail).first()
+
     # 2. Si no es Admin, buscar si es un Usuario común
-    if not cuenta:
-        cuenta = User.query.filter_by(_gmail=gmail).first()
+    if not account:
+        account = User.query.filter_by(_gmail=gmail).first()
 
     # 3. Validaciones de acceso
-    if cuenta is None:
+    if account is None:
         error = "El email es incorrecto o no está registrado"
-    elif not cuenta.check_password(password):
+    elif not account.check_password(password):
         error = "La contraseña es incorrecta"
 
     # 4. Generación del JWT
     if error is None:
         token = jwt.encode({
-            'user_id': cuenta.id,
-            'gmail': cuenta.gmail,
-            'rol': cuenta.rol, # Extrae automáticamente si es 'Admin' o 'Users'
+            'user_id': account.id,
+            'gmail': account.gmail,
+            'role': account.role, # Extrae automáticamente si es 'Admin' o 'Users'
             'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=2)
         }, Config.JWT_SECRET_KEY, algorithm="HS256")
 
         return jsonify({
-            "mensaje": "Login exitoso",
+            "message": "Login exitoso",
             "token": token,
-            "usuario": cuenta.to_dict()
+            "usuario": account.to_dict()
         }), 200
-        
+
     return jsonify({"error": error}), 401

@@ -17,7 +17,7 @@ with app.app_context():
 
 @app.route('/', methods=['GET'])
 def home():
-    return {"mensaje": "API del Mundial 2026 funcionando con ORM"}
+    return {"message": "API del Mundial 2026 funcionando con ORM"}
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=app.config['PORT'], debug=app.config['DEBUG'])

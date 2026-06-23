@@ -26,7 +26,7 @@ def admin_required(f):
             decoded_token = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=["HS256"])
             
             # Buscamos 'rol' igual a 'Admin'
-            if decoded_token.get("rol") != "Admin":
+            if decoded_token.get("role") != "Admin":
                 return jsonify({"error": "Acceso denegado. Se requiere privilegios de administrador."}), 403
                 
         except jwt.ExpiredSignatureError:
@@ -114,6 +114,6 @@ def delete_referee(referee_id):
     db.session.delete(referee)
     db.session.commit()
 
-    return jsonify({"mensaje": "Árbitro eliminado correctamente"}), 200
+    return jsonify({"message": "Árbitro eliminado correctamente"}), 200
 
 
