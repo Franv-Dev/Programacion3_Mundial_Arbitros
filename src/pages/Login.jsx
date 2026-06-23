@@ -46,7 +46,7 @@ export default function Login() {
 
     login(form.email, form.password);
 
-    navigate("/arbitros");
+    navigate("/referees");
   };
 
   return (
@@ -256,7 +256,7 @@ export default function Login() {
         >
           ¿No tenés cuenta?{" "}
           <Link
-            to="/registro"
+            to="/register"
             style={{
               color: COLORS.gold,
               textDecoration: "none",

@@ -1,9 +1,9 @@
 // components/ArbitroGrid.jsx
 
 import { Box } from "@mui/material";
-import ArbitroCard from "./ArbitroCard";
+import RefereeCard from "./RefereeCard";
 
-export default function ArbitroGrid({ arbitros, onSelect }) {
+export default function RefereeGrid({ referees, onSelect }) {
   return (
     <Box
       sx={{
@@ -24,11 +24,11 @@ export default function ArbitroGrid({ arbitros, onSelect }) {
         pb: 1,
       }}
     >
-      {arbitros.map((a) => (
-        <ArbitroCard
-          key={a.id}
-          arbitro={a}
-          onClick={() => onSelect(a)}
+      {referees.map((referee) => (
+        <RefereeCard
+          key={referee.id}
+          referee={referee}
+          onClick={() => onSelect(referee)}
         />
       ))}
     </Box>

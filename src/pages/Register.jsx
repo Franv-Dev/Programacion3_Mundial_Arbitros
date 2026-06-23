@@ -32,7 +32,7 @@ export default function Register() {
       return;
     }
     register(form.nombre, form.email, form.password);
-    navigate("/arbitros");
+    navigate("/referees");
   };
 
   return (

@@ -3,13 +3,13 @@ import { Box } from "@mui/material";
 
 import PageHeader from "../components/PageHeader";
 import StatsBar from "../components/StatsBar";
-import ArbitroGrid from "../components/ArbitroGrid";
-import ArbitroModal from "../components/ArbitroModal";
+import RefereeGrid from "../components/RefereeGrid";
+import RefereeModal from "../components/RefereeModal";
 
-import { ARBITROS } from "../data/arbitros";
+import { REFEREES } from "../data/arbitros";
 import worldcupBg from "../assets/worldcup-bg.png";
 
-export default function Arbitros() {
+export default function Referees() {
   const [selected, setSelected] = useState(null);
 
   return (
@@ -72,13 +72,13 @@ export default function Arbitros() {
 
         <StatsBar />
 
-        <ArbitroGrid
-          arbitros={ARBITROS}
+        <RefereeGrid
+          referees={REFEREES}
           onSelect={setSelected}
         />
 
-        <ArbitroModal
-          arbitro={selected}
+        <RefereeModal
+          referee={selected}
           onClose={() => setSelected(null)}
         />
       </Box>

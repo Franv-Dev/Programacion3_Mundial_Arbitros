@@ -20,11 +20,11 @@ export function AuthProvider({ children }) {
     setUser(session);
   };
 
-  const register = (nombre, email, password) => {
+  const register = (name, email, password) => {
     const users = JSON.parse(localStorage.getItem("users") || "[]");
-    users.push({ nombre, email });
+    users.push({ name, email });
     localStorage.setItem("users", JSON.stringify(users));
-    const session = { nombre, email };
+    const session = { name, email };
     localStorage.setItem("session", JSON.stringify(session));
     setUser(session);
   };
