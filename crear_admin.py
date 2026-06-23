@@ -10,7 +10,7 @@ def generar_admin():
                 _name="Admin",
                 _lastName="Principal",
                 _gmail="admin@impulsarstudio.com",
-                password="adminpassword123" 
+                password="adminpassword123"
             )
             db.session.add(nuevo_admin)
             db.session.commit()
